@@ -1,14 +1,39 @@
 "use client";
 
 import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
+import { ButtonHTMLAttributes } from "react";
 
-export default function BackButton() {
+type Props = {
+  title: string;
+  className?: string;
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link"
+    | null
+    | undefined;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
+export default function BackButton({
+  title,
+  variant,
+  className,
+  ...props
+}: Props) {
+  const router = useRouter();
   return (
     <Button
-      className="font-normal py-4 px-14 text-xl rounded"
-      onClick={() => window.history.back()}
+      className={className}
+      variant={variant}
+      title={title}
+      {...props}
+      onClick={() => router.back()}
     >
-      Back
+      {title}
     </Button>
   );
 }

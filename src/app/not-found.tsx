@@ -24,7 +24,11 @@ export default function NotFound() {
           priority={true}
           title="Page Not Found"
         />
-        <BackButton />
+        <BackButton
+          title="Back"
+          className="font-normal py-4 px-14 text-xl rounded"
+          variant="default"
+        />
       </div>
     </div>
   );
