@@ -1,10 +1,10 @@
+import * as Sentry from "@sentry/nextjs";
+import TicketForm from "@/app/(rs)/tickets/form/TicketForm";
 import BackButton from "@/components/BackButton";
 import { getCustomers } from "@/lib/queries/getCustomers";
 import { getTickets } from "@/lib/queries/getTickets";
-import * as Sentry from "@sentry/nextjs";
-import TicketForm from "./TicketForm";
 
-export default async function TicketsFormPage({
+export default async function TicketFormPage({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
@@ -14,80 +14,66 @@ export default async function TicketsFormPage({
     if (!customerId && !ticketId) {
       return (
         <>
-          <h1 className="text-2xl mb-2">
-            Ticket Id or Customer Id is required
-          </h1>
-          <BackButton title="Go Back" variant="link" />
+          <h2 className="text-2xl mb-2">
+            Ticket ID or Customer ID required to load ticket form
+          </h2>
+          <BackButton title="Go Back" variant="default" />
         </>
       );
     }
+
+    // New ticket form
     if (customerId) {
       const customer = await getCustomers(customerId);
+
       if (!customer) {
         return (
           <>
-            <h1 className="text-2xl mb-2">
-              There is no customer with id {customerId} is not found
-            </h1>
-            <BackButton title="Go Back" variant="link" />
+            <h2 className="text-2xl mb-2">
+              Customer ID #{customerId} not found
+            </h2>
+            <BackButton title="Go Back" variant="default" />
           </>
         );
       }
+
       if (!customer.active) {
         return (
           <>
-            <h1 className="text-2xl mb-2">
-              Customer with id {customerId} is not active
-            </h1>
-            <BackButton title="Go Back" variant="link" />
+            <h2 className="text-2xl mb-2">
+              Customer ID #{customerId} is not active.
+            </h2>
+            <BackButton title="Go Back" variant="default" />
           </>
         );
       }
-      //RETURN TICKET FROM TO ASSIGN TO THE SPECIFIC CUSTOMETR
-      <TicketForm customer={customer} />;
+
+      // return ticket form
+      return <TicketForm customer={customer} />;
     }
+
+    // Edit ticket form
     if (ticketId) {
       const ticket = await getTickets(ticketId);
+
       if (!ticket) {
         return (
           <>
-            <h1 className="text-2xl mb-2">
-              There is no ticket with id {ticketId} is not found
-            </h1>
-            <BackButton title="Go Back" variant="link" />
+            <h2 className="text-2xl mb-2">Ticket ID #{ticketId} not found</h2>
+            <BackButton title="Go Back" variant="default" />
           </>
         );
       }
+
       const customer = await getCustomers(ticket.customerId);
-      if (!customer) {
-        return (
-          <>
-            <h1 className="text-2xl mb-2">
-              There is no customer with id {ticket.customerId} is not found
-            </h1>
-            <BackButton title="Go Back" variant="link" />
-          </>
-        );
-      }
-      if (!customer.active) {
-        return (
-          <>
-            <h1 className="text-2xl mb-2">
-              Customer with id {ticket.customerId} is not active
-            </h1>
-            <BackButton title="Go Back" variant="link" />
-          </>
-        );
-      }
-      //RETURN TICKET FORM TO UPDATE THE TICKET FOR THR SPECIFIC CUSTOMETR
-      console.log("ticket", ticket);
-      console.log("customer", customer);
-      <TicketForm ticket={ticket} customer={customer} />;
+
+      // return ticket form
+      return <TicketForm customer={customer} ticket={ticket} />;
     }
-  } catch (error) {
-    if (error instanceof Error) {
-      Sentry.captureException(error);
-      throw new Error(error.message);
+  } catch (e) {
+    if (e instanceof Error) {
+      Sentry.captureException(e);
+      throw e;
     }
   }
 }

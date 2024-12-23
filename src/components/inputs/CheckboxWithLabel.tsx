@@ -1,11 +1,15 @@
+"use client";
+
 import { useFormContext } from "react-hook-form";
+
 import {
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Checkbox } from "@/components/ui/checkbox";
 
 type Props<S> = {
@@ -13,7 +17,8 @@ type Props<S> = {
   nameInSchema: keyof S & string;
   message: string;
 };
-export default function CheckboxWithLabel<S>({
+
+export function CheckboxWithLabel<S>({
   fieldTitle,
   nameInSchema,
   message,
@@ -25,11 +30,12 @@ export default function CheckboxWithLabel<S>({
       control={form.control}
       name={nameInSchema}
       render={({ field }) => (
-        <FormItem>
-          <FormLabel className="text-base" htmlFor={nameInSchema}>
+        <FormItem className="w-full flex items-center gap-2">
+          <FormLabel className="text-base w-1/3 mt-2" htmlFor={nameInSchema}>
             {fieldTitle}
           </FormLabel>
-          <div>
+
+          <div className="flex items-center gap-2">
             <FormControl>
               <Checkbox
                 id={nameInSchema}
@@ -37,9 +43,10 @@ export default function CheckboxWithLabel<S>({
                 checked={field.value}
                 onCheckedChange={field.onChange}
               />
-              {message}
             </FormControl>
+            {message}
           </div>
+
           <FormMessage />
         </FormItem>
       )}

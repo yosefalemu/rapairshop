@@ -40,7 +40,6 @@ export default function CustomerForm({ customer }: Props) {
   });
 
   async function onSubmit(data: insertCustomerSchemaType) {
-    console.log("SUBMIT BUTTON IS CLICKED");
     console.log(data);
   }
 

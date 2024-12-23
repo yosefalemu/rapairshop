@@ -20,7 +20,6 @@ export default async function CustomerFormPage({
           </>
         );
       } else {
-        console.log("customer", customer);
         return (
           <>
             <CustomerForm customer={customer} />
