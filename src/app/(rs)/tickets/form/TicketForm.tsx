@@ -15,13 +15,22 @@ import {
   type selectTicketSchemaType,
 } from "@/zod-schemas/tickets";
 import { selectCustomerSchemaType } from "@/zod-schemas/customers";
+import SelectWithLabel from "@/components/inputs/SelectWithLabel";
 
 type Props = {
   customer: selectCustomerSchemaType;
   ticket?: selectTicketSchemaType;
+  techs?: { id: string; description: string }[];
+  isEditable?: boolean;
 };
 
-export default function TicketForm({ customer, ticket }: Props) {
+export default function TicketForm({
+  customer,
+  ticket,
+  techs,
+  isEditable = true,
+}: Props) {
+  const isManager = Array.isArray(techs);
   const defaultValues: insertTicketSchemaType = {
     id: ticket?.id ?? "(New)",
     customerId: ticket?.customerId ?? customer.id,
@@ -57,16 +66,33 @@ export default function TicketForm({ customer, ticket }: Props) {
             <InputWithLabel<insertTicketSchemaType>
               fieldTitle="Title"
               nameInSchema="title"
+              disabled={!isEditable}
             />
-            <InputWithLabel<insertTicketSchemaType>
-              fieldTitle="Tech"
-              nameInSchema="tech"
-              disabled={true}
-            />
+            {isManager ? (
+              <SelectWithLabel<insertTicketSchemaType>
+                fieldTitle="Tech"
+                nameInSchema="tech"
+                data={[
+                  {
+                    id: "new-ticket@example.com",
+                    description: "new-ticket@example.com",
+                  },
+                  ...techs,
+                ]}
+              />
+            ) : (
+              <InputWithLabel<insertTicketSchemaType>
+                fieldTitle="Tech"
+                nameInSchema="tech"
+                disabled={true}
+              />
+            )}
+
             <CheckboxWithLabel<insertTicketSchemaType>
               fieldTitle="Completed"
               nameInSchema="completed"
               message="Yes"
+              disabled={!isEditable}
             />
             <div className="mt-4 space-y-2">
               <h3 className="text-lg">Customer Info</h3>
