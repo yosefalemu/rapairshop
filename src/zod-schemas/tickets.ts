@@ -1,9 +1,8 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { tickets } from "@/db/schema/tickets";
-import { z } from "zod";
 
 export const insertTicketSchema = createInsertSchema(tickets, {
-  id: z.union([z.string(), z.literal("New")]),
+  id: (schema) => schema.uuid("Invalid UUID format").optional(),
   title: (schema) => schema.min(1, "Title is required"),
   description: (schema) => schema.min(1, "Description is required"),
   tech: (schema) =>

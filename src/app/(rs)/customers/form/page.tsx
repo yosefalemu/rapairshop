@@ -1,7 +1,9 @@
-import BackButton from "@/components/BackButton";
-import { getCustomers } from "@/lib/queries/getCustomers";
 import * as Sentry from "@sentry/nextjs";
+
+import { getCustomers } from "@/lib/queries/getCustomers";
+
 import CustomerForm from "@/app/(rs)/customers/form/CustomerForm";
+import BackButton from "@/components/BackButton";
 
 export async function generateMetadata({
   searchParams,
@@ -10,13 +12,9 @@ export async function generateMetadata({
 }) {
   const { customerId } = await searchParams;
 
-  if (!customerId)
-    return { title: "New customer", description: "Create a new customer" };
+  if (!customerId) return { title: "New Customer" };
 
-  return {
-    title: `Edit customer #${customerId}`,
-    description: `Edit customer #${customerId}`,
-  };
+  return { title: `Edit Customer #${customerId}` };
 }
 
 export default async function CustomerFormPage({
@@ -26,33 +24,32 @@ export default async function CustomerFormPage({
 }) {
   try {
     const { customerId } = await searchParams;
+
+    // Edit customer form
     if (customerId) {
       const customer = await getCustomers(customerId);
+
       if (!customer) {
         return (
           <>
-            <h1>There is no customer with id {customerId} is not found</h1>
-            <BackButton title="Go Back" variant="link" />
-          </>
-        );
-      } else {
-        return (
-          <>
-            <CustomerForm customer={customer} />
+            <h2 className="text-2xl mb-2">
+              Customer ID #{customerId} not found
+            </h2>
+            <BackButton title="Go Back" variant="default" />
           </>
         );
       }
+      console.log(customer);
+      // put customer form component
+      return <CustomerForm customer={customer} />;
     } else {
-      return (
-        <>
-          <CustomerForm />
-        </>
-      );
+      // new customer form component
+      return <CustomerForm />;
     }
-  } catch (error) {
-    if (error instanceof Error) {
-      Sentry.captureException(error);
-      throw new Error(error.message);
+  } catch (e) {
+    if (e instanceof Error) {
+      Sentry.captureException(e);
+      throw e;
     }
   }
 }

@@ -77,10 +77,15 @@ export default {
             transform: "translateX(0)",
           },
         },
+        shrinkBar: {
+          "0%": { width: "100%" },
+          "100%": { width: "0%" },
+        },
       },
       animation: {
         appear: "appear 1s ease-in-out",
         slide: "slide 750ms ease-in-out",
+        shrinkBar: "shrinkBar 5s ease-out forwards",
       },
     },
   },
