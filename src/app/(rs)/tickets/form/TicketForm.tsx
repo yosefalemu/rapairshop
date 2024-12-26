@@ -16,6 +16,10 @@ import {
   type selectTicketSchemaType,
 } from "@/zod-schemas/tickets";
 import { selectCustomerSchemaType } from "@/zod-schemas/customers";
+import { useAction } from "next-safe-action/hooks";
+import { saveTicketAction } from "@/app/actions/saveTicketAction";
+import { LoaderCircle } from "lucide-react";
+import { DisplayServerActionResponse } from "@/components/DisplayServerActionResponse";
 
 type Props = {
   customer: selectCustomerSchemaType;
@@ -50,12 +54,30 @@ export default function TicketForm({
     defaultValues,
   });
 
+  const {
+    execute: saveTicket,
+    isPending: isSavingTicket,
+    result: saveTicketResult,
+    reset: resetTicket,
+  } = useAction(saveTicketAction, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: () => {},
+  });
+
   async function submitForm(data: insertTicketSchemaType) {
-    console.log(data);
+    saveTicket(data);
   }
 
   return (
     <div className="flex flex-col gap-1 sm:px-8">
+      <DisplayServerActionResponse
+        result={saveTicketResult}
+        onReset={() => {
+          resetTicket();
+        }}
+      />
       <div>
         <h2 className="text-2xl font-bold">
           {ticket?.id && isEditable
@@ -138,15 +160,26 @@ export default function TicketForm({
                   className="w-3/4"
                   variant="default"
                   title="Save"
+                  disabled={isSavingTicket}
                 >
-                  Save
+                  {isSavingTicket ? (
+                    <>
+                      <LoaderCircle className="animate-spin" />
+                    </>
+                  ) : (
+                    "Save"
+                  )}
                 </Button>
 
                 <Button
                   type="button"
                   variant="destructive"
                   title="Reset"
-                  onClick={() => form.reset(defaultValues)}
+                  disabled={isSavingTicket}
+                  onClick={() => {
+                    form.reset(defaultValues);
+                    resetTicket();
+                  }}
                 >
                   Reset
                 </Button>

@@ -6,8 +6,8 @@ import TicketForm from "@/app/(rs)/tickets/form/TicketForm";
 
 import BackButton from "@/components/BackButton";
 
-import { getCustomers } from "@/lib/queries/getCustomers";
-import { getTickets } from "@/lib/queries/getTickets";
+import { getCustomer } from "@/lib/queries/getCustomer";
+import { getTicket } from "@/lib/queries/getTicket";
 
 export async function generateMetadata({
   searchParams,
@@ -60,7 +60,7 @@ export default async function TicketFormPage({
 
     // New ticket form
     if (customerId) {
-      const customer = await getCustomers(customerId);
+      const customer = await getCustomer(customerId);
 
       if (!customer) {
         return (
@@ -101,7 +101,7 @@ export default async function TicketFormPage({
 
     // Edit ticket form
     if (ticketId) {
-      const ticket = await getTickets(ticketId);
+      const ticket = await getTicket(ticketId);
 
       if (!ticket) {
         return (
@@ -112,7 +112,7 @@ export default async function TicketFormPage({
         );
       }
 
-      const customer = await getCustomers(ticket.customerId);
+      const customer = await getCustomer(ticket.customerId);
 
       // return ticket form
       if (isManager) {

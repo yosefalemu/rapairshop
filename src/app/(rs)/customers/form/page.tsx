@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
 
-import { getCustomers } from "@/lib/queries/getCustomers";
+import { getCustomer } from "@/lib/queries/getCustomer";
 
 import CustomerForm from "@/app/(rs)/customers/form/CustomerForm";
 import BackButton from "@/components/BackButton";
@@ -27,7 +27,7 @@ export default async function CustomerFormPage({
 
     // Edit customer form
     if (customerId) {
-      const customer = await getCustomers(customerId);
+      const customer = await getCustomer(customerId);
 
       if (!customer) {
         return (

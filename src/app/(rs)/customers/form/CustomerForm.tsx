@@ -190,6 +190,7 @@ export default function CustomerForm({ customer }: Props) {
                 type="button"
                 variant="destructive"
                 title="Reset"
+                disabled={isSavingCustomer}
                 onClick={() => {
                   form.reset(defaultValues);
                   resetCustomer();
