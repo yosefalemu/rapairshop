@@ -1,6 +1,7 @@
 import { getTickets } from "@/lib/queries/getTickets";
 import TicketSearch from "./TicketSearch";
 import { getTicketSearchResults } from "@/lib/queries/getTicketsSearchResult";
+import TicketTable from "./TicketTable";
 
 export default async function Tickets({
   searchParams,
@@ -16,7 +17,7 @@ export default async function Tickets({
         {allTickets.length === 0 && (
           <p className="text-red-500">No tickets found</p>
         )}
-        {allTickets.length > 0 && <p>{JSON.stringify(allTickets)}</p>}
+        {allTickets.length > 0 && <TicketTable data={allTickets} />}
       </>
     );
   }
@@ -27,7 +28,7 @@ export default async function Tickets({
       {searchedTickets.length === 0 && (
         <p className="text-red-500">No tickets found</p>
       )}
-      {searchedTickets.length > 0 && <p>{JSON.stringify(searchedTickets)}</p>}
+      {searchedTickets.length > 0 && <TicketTable data={searchedTickets} />}
     </>
   );
 }

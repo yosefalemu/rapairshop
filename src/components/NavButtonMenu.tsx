@@ -32,7 +32,7 @@ export default function NavButtonMenu({ icon: Icon, label, choices }: Props) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="z-50 mt-1.5 rounded-sm shadow-sm border-2 border-primary/5 w-28"
+        className="z-50 mt-[5px] border border-secondary-foreground/10 rounded-sm shadow-sm bg-primary-foreground w-28"
         align="end"
       >
         {choices.map((choice) => {
